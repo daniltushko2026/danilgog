@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guns of Glory — Калькулятор</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #020617;
+    color: #e5e7eb;
+}
+
+header {
+    padding: 14px 16px;
+    color: #38bdf8;
+    border-bottom: 1px solid #1e293b;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.container {
+    padding: 15px;
+    max-width: 420px;
+    margin: auto;
+}
+
+.block {
+    background: #020617;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.block h2 {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #facc15;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid #334155;
+    background: #020617;
+    color: #e5e7eb;
+}
+
+button.main {
+    width: 100%;
+    padding: 16px;
+    font-size: 17px;
+    border-radius: 12px;
+    border: none;
+    background: #38bdf8;
+    color: #020617;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.result {
+    margin-top: 12px;
+    font-size: 16px;
+    white-space: pre-line;
+    color: #22c55e;
+}
+
+/* PC */
+@media (min-width: 768px) {
+    .container { max-width: 900px; }
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>Guns of Glory — Калькулятор</header>
+
+<div class="container">
+<div class="grid">
+
+    <div class="block">
+        <h2>📅 Время одного цикла</h2>
+        <input id="days" type="number" placeholder="Дни">
+        <input id="hours" type="number" placeholder="Часы">
+        <input id="minutes" type="number" placeholder="Минуты">
+    </div>
+
+    <div class="block">
+        <h2>⚡ Ускорения в наличии</h2>
+        <input id="speedDays" type="number" placeholder="Дней ускорений">
+        <input id="speedHours" type="number" placeholder="Часов ускорений">
+        <input id="speedMinutes" type="number" placeholder="Минут ускорений">
+    </div>
+
+    <div class="block">
+        <h2>🪖 Войска</h2>
+        <input id="troopsPerCycle" type="number" placeholder="Войск за 1 цикл">
+        <input id="powerPerTroop" type="number" placeholder="Сила 1 солдата">
+        <button class="main" onclick="calculate()">Рассчитать</button>
+        <div class="result" id="result"></div>
+    </div>
+
+</div>
+</div>
+
+<script>
+function formatNumber(num) {
+    return num.toLocaleString("ru-RU");
+}
+
+function calculate() {
+    const d = Number(days.value || 0);
+    const h = Number(hours.value || 0);
+    const m = Number(minutes.value || 0);
+
+    const cycleMinutes = d * 1440 + h * 60 + m;
+    if (cycleMinutes <= 0) {
+        result.innerText = "❌ Укажи корректное время цикла";
+        return;
+    }
+
+    const sd = Number(speedDays.value || 0);
+    const sh = Number(speedHours.value || 0);
+    const sm = Number(speedMinutes.value || 0);
+
+    const availableMinutes = sd * 1440 + sh * 60 + sm;
+    const cycles = Math.floor(availableMinutes / cycleMinutes);
+
+    const troopsPer = Number(troopsPerCycle.value || 0);
+    const totalTroops = cycles * troopsPer;
+
+    const powerPer = Number(powerPerTroop.value || 0);
+    const totalPower = totalTroops * powerPer;
+
+    result.innerText =
+        `🔁 Полных циклов: ${formatNumber(cycles)}\n` +
+        `🪖 Всего войск: ${formatNumber(totalTroops)}\n` +
+        `⚔ Общая сила армии: ${formatNumber(totalPower)}`;
+}
+</script>
+
+</body>
+</html>
